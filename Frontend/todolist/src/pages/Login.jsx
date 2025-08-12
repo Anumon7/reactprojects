@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,16 +12,36 @@ const Login = () => {
         console.log("Email:", email);
         console.log("Password:", password);
         navigate('/home');
-     
+
     };
 
     const handleForgot = () => {
         navigate('/forgotpassword');
     };
+    const baseurl = process.env.REACT_APP_BASE_URL;
+    console.log("Backend URL:", baseurl);
 
     const handleSignup = () => {
+
         navigate('/signup');
     };
+
+    const handlelogin = async () => {
+        const data = {
+            email: email,
+            password: password
+
+        }
+        const headers = { 'Content-Type': 'application/json' }
+        try {
+            const response = await axios.post(`${baseurl}/app/auth/signup`, data, { headers: headers })
+            const userdetails = response.data
+            console.log(userdetails, 'usedet')
+        }
+        catch (error) {
+            console.log(error.message, 'frr')
+        }
+    }
 
     return (
         <div className="d-flex vh-100">
@@ -69,7 +90,7 @@ const Login = () => {
                             />
                         </div>
 
-                        
+
                         <div className="text-end mb-3">
                             <p
                                 className="text-primary text-decoration-none"
@@ -80,12 +101,12 @@ const Login = () => {
                             </p>
                         </div>
 
-                       
-                        <button type="submit" className="btn btn-primary w-100 mb-2">
+
+                        <button type="buttom" onClick={handlelogin} className="btn btn-primary w-100 mb-2">
                             Login
                         </button>
 
-                       
+
                         <button
                             type="button"
                             className="btn btn-outline-secondary w-100"
