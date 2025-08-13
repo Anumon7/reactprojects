@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -26,22 +27,49 @@ const Login = () => {
         navigate('/signup');
     };
 
-    const handlelogin = async () => {
+    const handlelogin = async (e) => {
+        e.preventDefault();
         const data = {
             email: email,
             password: password
 
         }
-        const headers = { 'Content-Type': 'application/json' }
+        // const headers = { 'Content-Type': 'application/json' }
+
         try {
-            const response = await axios.post(`${baseurl}/app/auth/signup`, data, { headers: headers })
+            const response = await axios.post(`${baseurl}/app/auth/signup`, data)
             const userdetails = response.data
-            console.log(userdetails, 'usedet')
+            console.log(response,'response')
+            console.log(response.data.message, 'usedet')
+            toast.success(response.data.data.message)
+            navigate('/home');
+           
         }
         catch (error) {
-            console.log(error.message, 'frr')
+            console.log(error,'dfghjkl')
+            console.log(error.response.data.message, 'frr')
+            toast.error(error.response.data.message,)
         }
     }
+
+    // const handlelogin = async (e) => {
+    //     e.preventDefault();
+    
+    //     const data = {
+    //         email: email,
+    //         password: password
+    //     };
+    
+    //     try {
+    //         const response = await axios.post(`${baseurl}/app/auth/signup`, data);
+    //         console.log(response.data, 'user details');
+    //         toast.success(response.data.message);
+    //         navigate('/home');
+    //     } catch (error) {
+    //         console.error(error.response?.data || error.message);
+    //         toast.error(error.response?.data?.message || "Signup failed");
+    //     }
+    // }
 
     return (
         <div className="d-flex vh-100">
@@ -63,7 +91,7 @@ const Login = () => {
             <div className="d-flex justify-content-center align-items-center flex-column" style={{ flex: 1, backgroundColor: "#6ca193" }}>
                 <div className="card shadow p-4" style={{ width: "100%", maxWidth: "400px" }}>
                     <h2 className="text-center mb-4">Login</h2>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handlelogin}>
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label">Email address</label>
                             <input
